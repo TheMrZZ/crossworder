@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const grid_1 = __importDefault(require("./grid"));
-let grid = new grid_1.default();
+let grid = new grid_1.default(50);
 function displayGrid(table) {
     for (const row of table) {
         let rowDisplay = '';
@@ -19,10 +19,14 @@ function displayGrid(table) {
         console.log(rowDisplay + '\n');
     }
 }
-grid.addWord('testa');
+grid.addWord('eau');
 grid.addWord('etat');
-grid.addWord('tarte');
-grid.addWord('vente');
+grid.addWord('racine');
 grid.addWord('acheter');
-grid.addWord('acheter');
+grid.addWord('bonsoir');
+grid.addWord('deux');
+grid.addWord('warning');
+grid.addWord('array');
+console.time("total");
 displayGrid(grid.asTable());
+console.timeEnd("total");

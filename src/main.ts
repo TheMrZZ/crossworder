@@ -1,6 +1,6 @@
 import Grid from './grid';
 
-let grid = new Grid();
+let grid = new Grid(50);
 
 function displayGrid(table: { word: string, wordId: number | null }[][]) {
     for (const row of table) {
@@ -16,11 +16,15 @@ function displayGrid(table: { word: string, wordId: number | null }[][]) {
     }
 }
 
-grid.addWord('testa');
+grid.addWord('eau');
 grid.addWord('etat');
-grid.addWord('tarte');
-grid.addWord('vente');
+grid.addWord('racine');
 grid.addWord('acheter');
-grid.addWord('acheter');
+grid.addWord('bonsoir');
+grid.addWord('deux');
+grid.addWord('warning');
+grid.addWord('array');
 
+console.time("total");
 displayGrid(grid.asTable());
+console.timeEnd("total");

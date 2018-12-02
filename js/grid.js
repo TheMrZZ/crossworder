@@ -1,53 +1,18 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-function invalidPosition(position, cell, initRow, initCol, char, word) {
-    let { direction, row, col } = position;
-    const rowDiff = Math.abs(cell.row - row), colDiff = Math.abs(cell.col - col);
-    let invalidConditions = [
-        // No word in parallel
-        direction === Direction.HORIZONTAL &&
-            cell.direction === Direction.HORIZONTAL &&
-            colDiff === 1,
-        // No word in parallel
-        direction === Direction.VERTICAL &&
-            cell.direction === Direction.VERTICAL &&
-            rowDiff === 1,
-        // Two different letters can't superpose
-        cell.letter !== '' &&
-            cell.letter !== char &&
-            cell.row === row &&
-            cell.col === col,
-        /*
-                // Word can't be placed next to the end of a perpendicular word
-                direction === Direction.HORIZONTAL &&
-                cell.isLastLetter &&
-                rowDiff === 1 &&
-                cell.col === col,
-
-                // Word can't be placed next to the end of a perpendicular word
-                direction === Direction.VERTICAL &&
-                cell.isLastLetter &&
-                colDiff === 1 &&
-                cell.row === row,
-        */
-        // No letter can be at the beginning of the word
-        direction === Direction.HORIZONTAL &&
-            cell.col === initCol - 1 &&
-            cell.row === initRow,
-        // No letter can be at the beginning of the word
-        direction === Direction.VERTICAL &&
-            cell.col === initCol &&
-            cell.row === initRow - 1,
-        // No letter can be at the end of the word
-        direction === Direction.HORIZONTAL &&
-            cell.col === initCol + word.length + 1 &&
-            cell.row === initRow,
-        // No letter can be at the end of the word
-        direction === Direction.VERTICAL &&
-            cell.col === initCol &&
-            cell.row === initRow + word.length + 1,
-    ];
-    return invalidConditions.some(element => element === true);
+function shuffle(array) {
+    let currentIndex = array.length, temporaryValue, randomIndex;
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+    return array;
 }
 var Direction;
 (function (Direction) {
@@ -59,6 +24,57 @@ function perpendicular(direction) {
         return Direction.VERTICAL;
     }
     return Direction.HORIZONTAL;
+}
+function invalidPosition(position, cell, initRow, initCol, char, word) {
+    let { direction, row, col } = position;
+    const rowDiff = Math.abs(cell.row - row);
+    const colDiff = Math.abs(cell.col - col);
+    let invalidConditions = [
+        // No word in parallel
+        direction === Direction.HORIZONTAL &&
+            cell.direction === Direction.HORIZONTAL &&
+            rowDiff === 1,
+        // No word in parallel
+        direction === Direction.VERTICAL &&
+            cell.direction === Direction.VERTICAL &&
+            colDiff === 1,
+        // Word can't be placed next to the end of a perpendicular word
+        direction === Direction.HORIZONTAL &&
+            cell.isLastLetter &&
+            rowDiff === 1 &&
+            cell.col === col,
+        // Word can't be placed next to the end of a perpendicular word
+        direction === Direction.VERTICAL &&
+            cell.isLastLetter &&
+            colDiff === 1 &&
+            cell.row === row,
+        // Two different letters can't superpose
+        cell.letter !== '' &&
+            cell.letter !== char &&
+            cell.row === row &&
+            cell.col === col,
+        // Two letters from words in same direction can't superpose
+        cell.direction === direction &&
+            cell.row === row &&
+            cell.col === col,
+        // No letter can be at the beginning of the word
+        direction === Direction.HORIZONTAL &&
+            cell.col === initCol - 1 &&
+            cell.row === initRow,
+        // No letter can be at the beginning of the word
+        direction === Direction.VERTICAL &&
+            cell.col === initCol &&
+            cell.row === initRow - 1,
+        // No letter can be at the end of the word
+        direction === Direction.HORIZONTAL &&
+            cell.col === initCol + word.length &&
+            cell.row === initRow,
+        // No letter can be at the end of the word
+        direction === Direction.VERTICAL &&
+            cell.col === initCol &&
+            cell.row === initRow + word.length
+    ];
+    return invalidConditions.some(value => value === true);
 }
 class Cell {
     constructor(letter, col, row, direction, wordId, isLastLetter = false) {
@@ -93,6 +109,7 @@ class Grid {
                 row = limits.maxRow + 2;
                 col = limits.minRow;
                 direction = Direction.HORIZONTAL;
+                this.lonelyWords += 1;
             }
             else {
                 row = pos.row;
@@ -125,19 +142,19 @@ class Grid {
         }
         // Then remove the ones which would break existing words.
         possiblePositions = possiblePositions.filter(position => {
+            let { row, col, direction } = position; // Can't directly change the position, since it will change it in possiblePositions
             const initRow = position.row, initCol = position.col;
-            // Check if every letter will be placed on a valid position
-            for (let char of word) {
+            for (let letter of word) {
                 for (const cell of this.cells) {
-                    if (invalidPosition(position, cell, initRow, initCol, char, word)) {
+                    if (invalidPosition({ col, row, direction }, cell, initRow, initCol, letter, word)) {
                         return false;
                     }
                 }
-                if (position.direction === Direction.HORIZONTAL) {
-                    position.col++;
+                if (direction === Direction.HORIZONTAL) {
+                    col++;
                 }
                 else {
-                    position.row++;
+                    row++;
                 }
             }
             return true;
@@ -160,18 +177,17 @@ class Grid {
                 diff
             };
         });
-        pos.sort(position => position.diff);
-        console.log(JSON.stringify(pos, null, 2));
+        pos.sort((pos1, pos2) => (pos1.diff - pos2.diff));
         // Choose a random position in the best possible positions
         pos = pos.filter(position => position.diff === pos[0].diff);
-        let randomPos = pos[Math.floor(Math.random() * pos.length)];
+        let randomPos = pos[0] || pos[Math.floor(Math.random() * pos.length)];
         return { row: randomPos.row, col: randomPos.col, direction: randomPos.direction };
     }
     setWordInGrid(word) {
         let { row, col, direction } = word;
         for (let i = 0; i < word.letter.length; i++) {
-            const char = word.letter[i];
-            this.cells.push(new Cell(char, col, row, word.direction, word.wordId, i + 1 === word.letter.length));
+            const letter = word.letter[i];
+            this.cells.push(new Cell(letter, col, row, word.direction, word.wordId, i + 1 === word.letter.length));
             if (direction === Direction.HORIZONTAL) {
                 col++;
             }
@@ -210,12 +226,18 @@ class Grid {
         return Math.abs(1 - ratio);
     }
     clearGrid() {
+        this.nextId = 0;
         this.cells = [];
         this.lonelyWords = 0;
     }
-    generateGrid() {
+    generateGrid(random) {
         this.clearGrid();
-        this.words.sort(word => word.length);
+        if (random) {
+            shuffle(this.words);
+        }
+        else {
+            this.words.sort((w1, w2) => w2.length - w1.length);
+        }
         for (const word of this.words) {
             this.addWordToGrid(word);
         }
@@ -225,28 +247,33 @@ class Grid {
         let bestGridRatio;
         let bestCells;
         for (let i = 0; i < this.attempts; i++) {
-            this.generateGrid();
+            // Half use random word order, half use descending length order
+            this.generateGrid(i < this.attempts / 2);
             let gridRatio = this.gridShapeRatioDiff();
+            if (this.lonelyWords === 0) {
+                return;
+            }
             if (bestGridRatio === undefined ||
-                this.lonelyWords < bestLonelyWords
-                || this.lonelyWords === bestLonelyWords && gridRatio < bestGridRatio) {
+                this.lonelyWords < bestLonelyWords ||
+                this.lonelyWords === bestLonelyWords && gridRatio < bestGridRatio) {
                 bestGridRatio = gridRatio;
                 bestLonelyWords = this.lonelyWords;
                 bestCells = this.cells;
             }
         }
         if (bestCells === undefined) {
-            this.generateGrid();
+            this.generateGrid(false);
         }
         else {
             this.cells = bestCells;
+            this.lonelyWords = bestLonelyWords;
         }
     }
     asTable() {
         this.generateBestGrid();
         let limits = this.gridLimits();
         let shape = this.gridShape();
-        // Creates a table full of empty DIFFERENT arrays (just array.fill([]) would create arrays with same reference)
+        // Creates a table full of empty DIFFERENT arrays (just array.fill([]) will create arrays with same reference)
         let table = new Array(shape.height).fill(undefined).map(() => {
             return new Array(shape.width).fill({ word: '', wordId: null }, 0, shape.width);
         });
