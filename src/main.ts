@@ -1,19 +1,9 @@
-import Grid from './grid';
+/*import Grid from './grid';
 
 let grid = new Grid(50);
 
 function displayGrid(table: { word: string, wordId: number | null }[][]) {
-    for (const row of table) {
-        let rowDisplay = '';
-        for (const cell of row) {
-            if (cell.word === '') {
-                rowDisplay += '  ';
-            } else {
-                rowDisplay += cell.word + ' ';
-            }
-        }
-        console.log(rowDisplay + '\n');
-    }
+    console.table(table.map(row => row.map(cell => cell.word)));
 }
 
 grid.addWord('eau');
@@ -27,4 +17,10 @@ grid.addWord('array');
 
 console.time("total");
 displayGrid(grid.asTable());
-console.timeEnd("total");
+console.timeEnd("total");*/
+
+import Crossword from './crossword';
+
+let crossword = new Crossword();
+crossword.addWord("test");
+crossword.addWord("tast");
