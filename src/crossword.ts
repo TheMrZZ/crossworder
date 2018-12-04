@@ -1,5 +1,11 @@
 import {Direction, Grid2 as Grid, perpendicular} from './grid2';
 
+type Position = {
+    row: number,
+    col: number,
+    direction: Direction
+}
+
 function allIndexesOf(str: string, searchString: string, position?: number) {
     let indexes = [];
     for (let i = 0; i < str.length; i++) {
@@ -26,19 +32,20 @@ export default class Crossword {
     }
 
     addWord(word: string) {
-        this.words.push(word);
-        this.getWordCoordinates(word);
-        this.grid.addWord(word, 0, 0, Direction.HORIZONTAL);
+        let pos = this.getWordCoordinates(word);
+        this.grid.addWord(word, pos.row, pos.col, pos.direction);
         console.table(this.grid.getGrid().map(row => row.map(cell => cell.letter)));
+
+        this.words.push(word);
     }
 
-    private getWordCoordinates(word: string): { row: number, col: number } {
+    private getWordCoordinates(word: string): Position {
         if (this.words.length === 0) {
-            return {row: 0, col: 0};
+            return {row: 0, col: 0, direction: Direction.HORIZONTAL};
         }
 
         // Possible starting positions for the new word
-        let possiblePositions: { row: number, col: number, direction: Direction }[] = [];
+        let possiblePositions: Position[] = [];
 
 
         this.grid.forEachCell(((cell, row, col) => {
@@ -121,7 +128,6 @@ export default class Crossword {
         });
 
         // Now, positions are valid. Let's take a random one for now
-
-        return {row: 0, col: 0};
+        return possiblePositions[Math.floor(Math.random() * possiblePositions.length)];
     }
 }

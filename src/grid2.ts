@@ -65,13 +65,20 @@ export class Grid2 {
 
     addEmptyRows(n: number = 1, atBeginning: boolean = true) {
         for (let i = 0; i < n; i++) {
+            // Get width BEFORE adding a row, because the global width is based on 1st row width
+            const currentWidth = this.width;
+
             if (atBeginning) {
-                this.grid.push([]);
-            } else {
                 this.grid.unshift([]);
+            } else {
+                this.grid.push([]);
             }
-            for (let j = 0; j < this.width; j++) {
-                this.grid[0].push(Cell.emptyCell());
+            for (let j = 0; j < currentWidth; j++) {
+                let row = 0;
+                if (!atBeginning) {
+                    row = this.height - 1;
+                }
+                this.grid[row].push(Cell.emptyCell());
             }
         }
     }
@@ -80,9 +87,9 @@ export class Grid2 {
         for (let i = 0; i < n; i++) {
             for (const row of this.grid) {
                 if (atBeginning) {
-                    row.push(Cell.emptyCell());
-                } else {
                     row.unshift(Cell.emptyCell());
+                } else {
+                    row.push(Cell.emptyCell());
                 }
             }
         }
@@ -90,11 +97,11 @@ export class Grid2 {
 
     addWord(word: string, row: number, col: number, direction: Direction) {
         if (row < 0) {
-            this.addEmptyRows(-row);
+            this.addEmptyRows(-row, true);
             row = 0;
         }
         if (col < 0) {
-            this.addEmptyColumns(-col);
+            this.addEmptyColumns(-col, true);
             col = 0;
         }
         if (row + word.length >= this.height && direction === Direction.VERTICAL) {
