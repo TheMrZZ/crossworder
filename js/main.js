@@ -8,13 +8,64 @@ function displayGrid(table: { word: string, wordId: number | null }[][]) {
 }
 
 grid.addWord('eau');
-grid.addWord('etat');
-grid.addWord('racine');
-grid.addWord('acheter');
-grid.addWord('bonsoir');
-grid.addWord('deux');
-grid.addWord('warning');
-grid.addWord('array');
+grid.addWord('attaque');
+grid.addWord('vendre');
+grid.addWord('attraper');
+
+grid.addWord('eau');
+grid.addWord('attaque');
+grid.addWord('vendre');
+grid.addWord('attraper');
+
+grid.addWord('eau');
+grid.addWord('attaque');
+grid.addWord('vendre');
+grid.addWord('attraper');
+
+grid.addWord('eau');
+grid.addWord('attaque');
+grid.addWord('vendre');
+grid.addWord('attraper');
+
+grid.addWord('eau');
+grid.addWord('attaque');
+grid.addWord('vendre');
+grid.addWord('attraper');
+
+grid.addWord('eau');
+grid.addWord('attaque');
+grid.addWord('vendre');
+grid.addWord('attraper');
+
+grid.addWord('eau');
+grid.addWord('attaque');
+grid.addWord('vendre');
+grid.addWord('attraper');
+
+grid.addWord('eau');
+grid.addWord('attaque');
+grid.addWord('vendre');
+grid.addWord('attraper');
+
+grid.addWord('eau');
+grid.addWord('attaque');
+grid.addWord('vendre');
+grid.addWord('attraper');
+
+grid.addWord('eau');
+grid.addWord('attaque');
+grid.addWord('vendre');
+grid.addWord('attraper');
+
+grid.addWord('eau');
+grid.addWord('attaque');
+grid.addWord('vendre');
+grid.addWord('attraper');
+
+grid.addWord('eau');
+grid.addWord('attaque');
+grid.addWord('vendre');
+grid.addWord('attraper');
 
 console.time("total");
 displayGrid(grid.asTable());
@@ -24,6 +75,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const crossword_1 = __importDefault(require("./crossword"));
-let crossword = new crossword_1.default();
+console.time("total");
+let crossword = new crossword_1.default(50);
 crossword.addWord('eau');
-crossword.addWord('xxx');
+crossword.addWord('attaque');
+crossword.addWord('vendre');
+crossword.addWord('attraper');
+console.timeEnd("total");

@@ -87,11 +87,11 @@ class Cell {
     }
 }
 class Grid {
-    constructor(attempts) {
+    constructor(attempts = 10) {
         this.cells = [];
         this.words = [];
         this.nextId = 0;
-        this.attempts = attempts || 10;
+        this.attempts = attempts;
         this.lonelyWords = 0;
     }
     addWord(word) {

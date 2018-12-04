@@ -117,11 +117,11 @@ export default class Grid {
     private attempts: number;
     private lonelyWords: number;
 
-    constructor(attempts?: number) {
+    constructor(attempts: number = 10) {
         this.cells = [];
         this.words = [];
         this.nextId = 0;
-        this.attempts = attempts || 10;
+        this.attempts = attempts;
         this.lonelyWords = 0;
     }
 

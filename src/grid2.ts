@@ -1,6 +1,7 @@
 export enum Direction {
     HORIZONTAL,
     VERTICAL,
+    BOTH,
     NONE
 }
 
@@ -12,14 +13,20 @@ export function perpendicular(direction: Direction): Direction {
 }
 
 export class Cell {
-    public wordId: number | null;
+    public wordId: number[];
     public letter: string;
     public direction: Direction;
+    public readonly originalDirection: Direction;
 
-    constructor(letter: string, direction: Direction, wordId: number | null) {
+    constructor(letter: string, direction: Direction, wordId: number[] | number) {
         this.letter = letter;
-        this.wordId = wordId;
+        if (typeof wordId === 'number') {
+            this.wordId = [wordId];
+        } else {
+            this.wordId = wordId;
+        }
         this.direction = direction;
+        this.originalDirection = direction;
     }
 
     static emptyCell() {
@@ -29,11 +36,9 @@ export class Cell {
 
 export class Grid2 {
     private grid: Cell[][];
-    private nextId: number;
 
     constructor() {
         this.grid = [[]];
-        this.nextId = 0;
     }
 
     get height() {
@@ -58,9 +63,18 @@ export class Grid2 {
 
     setCell(cell: Cell, row: number, col: number) {
         if (!this.inBound(row, col)) {
+            console.table(this.grid.map(row => row.map(cell => JSON.stringify(cell))));
             throw new Error(`Cell is out of bounds (row=${row}, col=${col}, cell=${JSON.stringify(cell)}`);
         }
-        this.grid[row][col] = cell;
+
+        // If there is no cell, overwrite it
+        if (this.grid[row][col].letter === '') {
+            this.grid[row][col] = cell;
+        } else {
+            // If there is already a cell, they have the same letter: merge the IDs
+            this.grid[row][col].wordId.push(cell.wordId[0]);
+            this.grid[row][col].direction = Direction.BOTH;
+        }
     }
 
     addEmptyRows(n: number = 1, atBeginning: boolean = true) {
@@ -95,7 +109,7 @@ export class Grid2 {
         }
     }
 
-    addWord(word: string, row: number, col: number, direction: Direction) {
+    addWord(word: string, row: number, col: number, direction: Direction, wordId: number) {
         if (row < 0) {
             this.addEmptyRows(-row, true);
             row = 0;
@@ -107,21 +121,24 @@ export class Grid2 {
 
         let endRow = row, endCol = col;
         if (direction === Direction.HORIZONTAL) {
-            endCol += word.length;
+            endCol += word.length - 1;
         } else {
-            endRow += word.length;
+            endRow += word.length - 1;
         }
-
+        console.log(`Word is "${word}" (len=${word.length}), row = ${row}, col = ${col}`);
         if (endRow >= this.height) {
-            this.addEmptyRows(endRow - this.height, false);
+            const rows = endRow - this.height + 1;
+            console.log(`endRow = ${endRow}, this.height = ${this.height}, adding ${rows} rows.`);
+            this.addEmptyRows(rows, false);
         }
         if (endCol >= this.width) {
-            this.addEmptyColumns(endCol - this.width, false);
+            const cols = endCol - this.width + 1;
+            console.log(`endCol = ${endCol}, this.width = ${this.width}, adding ${cols} cols.`);
+            this.addEmptyColumns(cols, false);
         }
 
         for (const letter of word) {
-            let cell = new Cell(letter, direction, this.nextId);
-            this.nextId++;
+            let cell = new Cell(letter, direction, wordId);
 
             this.setCell(cell, row, col);
 
@@ -133,8 +150,54 @@ export class Grid2 {
         }
     }
 
+    removeWord(wordId: number) {
+        for (let i = 0; i < this.grid.length; i++) {
+            for (let j = 0; j < this.grid[i].length; j++) {
+                const index = this.grid[i][j].wordId.indexOf(wordId);
+                if (index > -1) {
+                    // Remove the id from the list of ids
+                    this.grid[i][j].wordId.splice(index, 1);
+                }
+
+                // If there is only one ID left, change from Direction.BOTH to the original direction of the cell
+                if (this.grid[i][j].wordId.length === 1) {
+                    this.grid[i][j].direction = this.grid[i][j].originalDirection;
+                }
+
+                // If there is no more IDs, it means that this letter should not exist anymore => delete it
+                if (this.grid[i][j].wordId.length === 0) {
+                    this.grid[i][j] = Cell.emptyCell();
+                }
+            }
+        }
+
+        this.trimGrid();
+    }
+
     getGrid() {
         return this.grid;
+    }
+
+    trimGrid() {
+        // First row is empty
+        while (!this.grid[0].some(cell => cell.letter !== "")) {
+            this.grid.shift();
+        }
+
+        // Last row is empty
+        while (!this.grid[this.height - 1].some(cell => cell.letter !== "")) {
+            this.grid.pop();
+        }
+
+        // First col is empty
+        while (!this.grid.some(row => row[0].letter !== "")) {
+            this.grid.forEach(row => row.shift());
+        }
+
+        // Last col is empty
+        while (!this.grid.some(row => row[row.length - 1].letter !== "")) {
+            this.grid.forEach(row => row.pop());
+        }
     }
 
     forEachCell(fn: (cell: Cell, row: number, col: number) => void) {
