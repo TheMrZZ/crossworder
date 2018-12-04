@@ -22,5 +22,5 @@ console.timeEnd("total");*/
 import Crossword from './crossword';
 
 let crossword = new Crossword();
-crossword.addWord("test");
-crossword.addWord("tast");
+crossword.addWord('eau');
+crossword.addWord('xxx');

@@ -104,11 +104,19 @@ export class Grid2 {
             this.addEmptyColumns(-col, true);
             col = 0;
         }
-        if (row + word.length >= this.height && direction === Direction.VERTICAL) {
-            this.addEmptyRows((row + word.length) - this.height, false);
+
+        let endRow = row, endCol = col;
+        if (direction === Direction.HORIZONTAL) {
+            endCol += word.length;
+        } else {
+            endRow += word.length;
         }
-        if (col + word.length >= this.width && direction === Direction.HORIZONTAL) {
-            this.addEmptyColumns((col + word.length) - this.width, false);
+
+        if (endRow >= this.height) {
+            this.addEmptyRows(endRow - this.height, false);
+        }
+        if (endCol >= this.width) {
+            this.addEmptyColumns(endCol - this.width, false);
         }
 
         for (const letter of word) {

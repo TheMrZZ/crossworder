@@ -127,6 +127,10 @@ export default class Crossword {
             return this.grid.getCell(row, col).letter === '';
         });
 
+        if (possiblePositions.length === 0) {
+            return {row: this.grid.height + 1, col: 0, direction: Direction.HORIZONTAL};
+        }
+
         // Now, positions are valid. Let's take a random one for now
         return possiblePositions[Math.floor(Math.random() * possiblePositions.length)];
     }
