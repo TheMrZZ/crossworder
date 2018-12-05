@@ -1,3 +1,5 @@
+import debug from './debug';
+
 export enum Direction {
     HORIZONTAL,
     VERTICAL,
@@ -49,6 +51,10 @@ export class Grid2 {
         return this.grid[0].length;
     }
 
+    get area() {
+        return this.width * this.height;
+    }
+
     inBound(row: number, col: number): boolean {
         return (0 <= row && row < this.height && 0 <= col && col < this.width);
     }
@@ -63,7 +69,7 @@ export class Grid2 {
 
     setCell(cell: Cell, row: number, col: number) {
         if (!this.inBound(row, col)) {
-            console.table(this.grid.map(row => row.map(cell => JSON.stringify(cell))));
+            debug.table(this.grid.map(row => row.map(cell => JSON.stringify(cell))));
             throw new Error(`Cell is out of bounds (row=${row}, col=${col}, cell=${JSON.stringify(cell)}`);
         }
 
@@ -125,15 +131,15 @@ export class Grid2 {
         } else {
             endRow += word.length - 1;
         }
-        console.log(`Word is "${word}" (len=${word.length}), row = ${row}, col = ${col}`);
+        debug.log(`Word is "${word}" (len=${word.length}), row = ${row}, col = ${col}`);
         if (endRow >= this.height) {
             const rows = endRow - this.height + 1;
-            console.log(`endRow = ${endRow}, this.height = ${this.height}, adding ${rows} rows.`);
+            debug.log(`endRow = ${endRow}, this.height = ${this.height}, adding ${rows} rows.`);
             this.addEmptyRows(rows, false);
         }
         if (endCol >= this.width) {
             const cols = endCol - this.width + 1;
-            console.log(`endCol = ${endCol}, this.width = ${this.width}, adding ${cols} cols.`);
+            debug.log(`endCol = ${endCol}, this.width = ${this.width}, adding ${cols} cols.`);
             this.addEmptyColumns(cols, false);
         }
 

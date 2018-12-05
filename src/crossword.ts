@@ -1,4 +1,26 @@
+import debug from './debug';
+
 import {Direction, Grid2 as Grid, perpendicular} from './grid2';
+
+// Knuth shuffle
+function shuffle(array: any[]) {
+    let currentIndex: number = array.length, temporaryValue, randomIndex;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+}
 
 type Position = {
     row: number,
@@ -38,12 +60,50 @@ export default class Crossword {
     }
 
     addWord(word: string) {
-        let pos = this.getWordCoordinates(word);
-        this.grid.addWord(word, pos.row, pos.col, pos.direction, this.nextId);
-        this.nextId++;
-        console.table(this.grid.getGrid().map(row => row.map(cell => cell.letter)));
-
         this.words.push(word);
+    }
+
+    private clear() {
+        this.grid = new Grid();
+        this.nextId = 0;
+        this.lonelyWords = 0;
+    }
+
+    private _generate(random: boolean = false) {
+        if (!random) {
+            this.words.sort((s1, s2) => s2.length - s1.length);
+        } else {
+            shuffle(this.words);
+        }
+
+        for (const word of this.words) {
+            let pos = this.getWordCoordinates(word);
+            this.grid.addWord(word, pos.row, pos.col, pos.direction, this.nextId);
+            this.nextId++;
+            debug.table(this.grid.getGrid().map(row => row.map(cell => cell.letter)));
+        }
+    }
+
+    generate() {
+        let bestCrossword: Crossword | undefined;
+        let bestRatio: number | undefined;
+
+        for (let i = 0; i < this.attempts; i++) {
+            this.clear();
+            this._generate(i < this.attempts / 2);
+            let ratio = Math.abs(1 - this.grid.height / this.grid.width);
+            console.log('Grid Ratio:', ratio, '- lonely words:', this.lonelyWords);
+            if (bestCrossword === undefined || bestRatio === undefined ||
+                this.lonelyWords < bestCrossword.lonelyWords ||
+                this.lonelyWords === bestCrossword.lonelyWords && ratio <= bestRatio && this.grid.area < bestCrossword.grid.area) {
+                bestRatio = ratio;
+                bestCrossword = Object.assign({}, this);
+            }
+        }
+
+        Object.assign(this, bestCrossword);
+
+        console.log('Best ratio:', bestRatio, '- best lonely words:', this.lonelyWords);
     }
 
     private getWordCoordinates(word: string): Position {
@@ -73,7 +133,7 @@ export default class Crossword {
                 }
             }
         }));
-        console.log('Possible positions:', possiblePositions);
+        debug.log('Possible positions:', possiblePositions);
 
         // Remove positions where word would break the crossword rules
         possiblePositions = possiblePositions.filter(position => {
@@ -137,6 +197,7 @@ export default class Crossword {
         });
 
         if (possiblePositions.length === 0) {
+            this.lonelyWords++;
             return {row: this.grid.height + 1, col: 0, direction: Direction.HORIZONTAL};
         }
 
