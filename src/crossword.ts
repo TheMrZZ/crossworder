@@ -40,7 +40,7 @@ function allIndexesOf(str: string, searchString: string, position: number = 0) {
     return indexes;
 }
 
-export default class Crossword {
+export class Crossword {
     private words: string[];
     private grid: Grid;
     private nextId: number;
@@ -92,7 +92,7 @@ export default class Crossword {
             this.clear();
             this._generate(i < this.attempts / 2);
             let ratio = Math.abs(1 - this.grid.height / this.grid.width);
-            console.log('Grid Ratio:', ratio, '- lonely words:', this.lonelyWords);
+
             if (bestCrossword === undefined || bestRatio === undefined ||
                 this.lonelyWords < bestCrossword.lonelyWords ||
                 this.lonelyWords === bestCrossword.lonelyWords && ratio <= bestRatio && this.grid.area < bestCrossword.grid.area) {
@@ -100,10 +100,7 @@ export default class Crossword {
                 bestCrossword = Object.assign({}, this);
             }
         }
-
         Object.assign(this, bestCrossword);
-
-        console.log('Best ratio:', bestRatio, '- best lonely words:', this.lonelyWords);
     }
 
     private getWordCoordinates(word: string): Position {

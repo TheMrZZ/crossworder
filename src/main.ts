@@ -1,15 +1,52 @@
-import Crossword from './crossword';
+import {Crossword} from './crossword';
+import {Latinize} from "./latinize";
 
-let crossword = new Crossword(500);
+let table: HTMLElement | null;
+let input: HTMLInputElement | null;
+let crossword: Crossword;
 
-crossword.addWord('eau');
-crossword.addWord('attaque');
-crossword.addWord('vendre');
-crossword.addWord('attraper');
+document.addEventListener("DOMContentLoaded", function () {
+    table = document.getElementById('crossword');
+    let form = document.getElementById('wordForm');
+    input = document.getElementById('wordInput') as HTMLInputElement;
 
-console.time("total");
-crossword.generate();
-console.timeEnd("total");
+    if (table === null || form === null || input === null) {
+        throw new Error('Table or form or input is null.');
+    }
+    form.onsubmit = addWord;
+    crossword = new Crossword(100);
+});
 
-console.log('THE BEST CROSSWORD IS...');
-console.table(crossword.getGrid().getGrid().map(row => row.map(cell => cell.letter)));
+function addWord() {
+    if (table === null || input === null) {
+        throw new Error('Table or input is null.');
+    }
+
+    const word = Latinize.latinize(input.value).toUpperCase();
+    console.log('WORD IS', word);
+    crossword.addWord(word);
+    crossword.generate();
+    console.log(crossword.getGrid().getGrid().map(row => row.map(cell => cell.letter)));
+    createTable();
+}
+
+function createTable() {
+    if (table === null) {
+        throw new Error('Table is null.');
+    }
+    table.innerHTML = '';
+    let tableBody = document.createElement('tbody');
+
+    crossword.getGrid().getGrid().forEach(function(rowData) {
+        let row = document.createElement('tr');
+
+        rowData.forEach(function(cellData) {
+            let cell = document.createElement('td');
+            cell.appendChild(document.createTextNode(cellData.letter));
+            row.appendChild(cell);
+        });
+
+        tableBody.appendChild(row);
+    });
+    table.appendChild(tableBody);
+}
