@@ -1,3 +1,42 @@
+// Knuth shuffle
+export function shuffle(array: any[]) {
+    let currentIndex: number = array.length, temporaryValue, randomIndex;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+}
+
+export function range(start: number, end: number): number[] {
+    let list = [];
+    for (let i = start; i < end; i++) {
+        list.push(i);
+    }
+    return list;
+}
+
+/*
+ * Returns a range of numbers, but in a random order.
+ * Ex: randomRange(0, 5) => [1, 4, 0, 3, 2]
+ */
+export function randomRange(start: number, end: number): number[] {
+    let numbers = range(start, end);
+    shuffle(numbers);
+    return numbers;
+}
+
+// Latinize a word
 export class Latinize {
     // noinspection NonAsciiCharacters
     private static latin_map: { [key: string]: string } = {
