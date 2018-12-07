@@ -1,0 +1,94 @@
+body {
+  background: white;
+}
+
+main {
+  font-size: 2em;
+}
+
+#crossword {
+  table-layout: fixed;
+  text-align: center;
+}
+
+
+/* Auto generated. Colors taken from https://en.wikipedia.org/wiki/Help:Distinguishable_colors */
+.word0 {
+  color: #e6194b
+}
+
+.word1 {
+  color: #3cb44b
+}
+
+.word2 {
+  color: #ffe119
+}
+
+.word3 {
+  color: #4363d8
+}
+
+.word4 {
+  color: #f58231
+}
+
+.word5 {
+  color: #911eb4
+}
+
+.word6 {
+  color: #46f0f0
+}
+
+.word7 {
+  color: #f032e6
+}
+
+.word8 {
+  color: #bcf60c
+}
+
+.word9 {
+  color: #fabebe
+}
+
+.word10 {
+  color: #008080
+}
+
+.word11 {
+  color: #000000
+}
+
+.word12 {
+  color: #9a6324
+}
+
+.word13 {
+  color: red;
+}
+
+.word14 {
+  color: #800000
+}
+
+.word15 {
+  color: #aaffc3
+}
+
+.word16 {
+  color: #808000
+}
+
+.word17 {
+  color: #005408
+}
+
+.word18 {
+  color: #000075
+}
+
+.word19 {
+  color: #808080
+}

@@ -4,6 +4,7 @@
 
 # IntelliJ project files
 .idea
+dist
 js
 
 gen### Example user template template

@@ -1,26 +1,7 @@
 import debug from './debug';
 
-import {Direction, Grid2 as Grid, perpendicular} from './grid2';
-
-// Knuth shuffle
-function shuffle(array: any[]) {
-    let currentIndex: number = array.length, temporaryValue, randomIndex;
-
-    // While there remain elements to shuffle...
-    while (0 !== currentIndex) {
-
-        // Pick a remaining element...
-        randomIndex = Math.floor(Math.random() * currentIndex);
-        currentIndex -= 1;
-
-        // And swap it with the current element.
-        temporaryValue = array[currentIndex];
-        array[currentIndex] = array[randomIndex];
-        array[randomIndex] = temporaryValue;
-    }
-
-    return array;
-}
+import {Direction, Grid as Grid, perpendicular} from './grid';
+import {shuffle} from './utils';
 
 type Position = {
     row: number,
@@ -92,7 +73,7 @@ export class Crossword {
             this.clear();
             this._generate(i < this.attempts / 2);
             let ratio = Math.abs(1 - this.grid.height / this.grid.width);
-
+            console.log('Grid Ratio:', ratio, '- lonely words:', this.lonelyWords);
             if (bestCrossword === undefined || bestRatio === undefined ||
                 this.lonelyWords < bestCrossword.lonelyWords ||
                 this.lonelyWords === bestCrossword.lonelyWords && ratio <= bestRatio && this.grid.area < bestCrossword.grid.area) {
@@ -100,7 +81,10 @@ export class Crossword {
                 bestCrossword = Object.assign({}, this);
             }
         }
+
         Object.assign(this, bestCrossword);
+
+        console.log('Best ratio:', bestRatio, '- best lonely words:', this.lonelyWords);
     }
 
     private getWordCoordinates(word: string): Position {
@@ -116,17 +100,17 @@ export class Crossword {
             // Take only the cells which have the same letter than one in the word
             const indexes = allIndexesOf(word, cell.letter);
             for (const index of indexes) {
-
                 if (index >= 0) {
                     let direction = perpendicular(cell.direction);
+                    let pos = {row, col, direction};
 
                     if (direction === Direction.VERTICAL) {
-                        row -= index;
+                        pos.row -= index;
                     } else {
-                        col -= index;
+                        pos.col -= index;
                     }
 
-                    possiblePositions.push({row, col, direction});
+                    possiblePositions.push(pos);
                 }
             }
         }));
