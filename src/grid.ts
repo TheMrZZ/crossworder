@@ -214,4 +214,8 @@ export class Grid {
             }
         }
     }
+
+    transpose() {
+        this.grid = this.grid[0].map((_, i) => this.grid.map(row => row[i]));
+    }
 }

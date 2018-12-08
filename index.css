@@ -1,16 +1,72 @@
 body {
+  margin: 0;
+  padding: 0;
   background: white;
+  height: 100vh;
+  color: #191919;
+  display: flex;
+  flex-direction: column;
 }
 
+/* Header */
+#head {
+  text-align: center;
+  vertical-align: center;
+  background-color: rgb(250, 247, 248);
+  font-family: "Segoe UI", sans-serif;
+  border-radius: 1px;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+  margin-bottom: 2px;
+}
+
+#head h1 {
+  margin: 0;
+  padding: 0;
+}
+
+/* Content */
 main {
+  flex-grow: 1;
   font-size: 2em;
+  display: flex;
+  align-items: flex-start;
+  flex-direction: row;
 }
 
+main > * {
+  padding: 10px;
+}
+
+/* Aside */
+#aside {
+  flex: 0 0 20%;
+  border-radius: 2px;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
+  background-color: rgb(250, 247, 248);
+  position: sticky;
+  min-height: 100%;
+}
+
+#wordForm {
+  line-height: 0;
+  display: flex;
+  justify-content: space-around;
+}
+
+#wordInput {
+  border-radius: 1px;
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
+  border: none;
+  color: rgba(0, 0, 0, .87);
+  margin: auto;
+  width: 80%;
+}
+
+/* Crossword */
 #crossword {
   table-layout: fixed;
   text-align: center;
 }
-
 
 /* Auto generated. Colors taken from https://en.wikipedia.org/wiki/Help:Distinguishable_colors */
 .word0 {
@@ -38,7 +94,7 @@ main {
 }
 
 .word6 {
-  color: #46f0f0
+  color: #808000
 }
 
 .word7 {
@@ -46,7 +102,7 @@ main {
 }
 
 .word8 {
-  color: #bcf60c
+  color: #005408
 }
 
 .word9 {
@@ -58,7 +114,7 @@ main {
 }
 
 .word11 {
-  color: #000000
+  color: #0078ff
 }
 
 .word12 {
@@ -74,21 +130,5 @@ main {
 }
 
 .word15 {
-  color: #aaffc3
-}
-
-.word16 {
-  color: #808000
-}
-
-.word17 {
-  color: #005408
-}
-
-.word18 {
   color: #000075
-}
-
-.word19 {
-  color: #808080
 }

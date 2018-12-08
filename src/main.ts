@@ -42,7 +42,7 @@ function createTable() {
     table.innerHTML = '';
     let tableBody = document.createElement('tbody');
 
-    const numberOfColors = 21;
+    const numberOfColors = 16;
     let wordColorNumber: { [key: number]: number } = {};
     randomRange(0, numberOfColors).forEach(((value, index) => {
         wordColorNumber[index] = value;

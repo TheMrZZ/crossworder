@@ -21,19 +21,26 @@ function allIndexesOf(str: string, searchString: string, position: number = 0) {
     return indexes;
 }
 
+function getRatio(height: number, width:number): number {
+    const wantedRatio = 0.5;
+    return Math.abs(0.5 - height / width);
+}
+
 export class Crossword {
-    private words: string[];
     private grid: Grid;
     private nextId: number;
     private lonelyWords: number;
-    private attempts: number;
+    private readonly words: string[];
+    private readonly attempts: number;
+    private readonly minimumRatio: number;
 
-    constructor(attempts: number = 1) {
+    constructor(attempts: number = 1, minimumRatio: number = 0.25) {
         this.words = [];
         this.grid = new Grid();
         this.nextId = 0;
         this.lonelyWords = 0;
         this.attempts = attempts;
+        this.minimumRatio = minimumRatio;
     }
 
     getGrid() {
@@ -69,11 +76,21 @@ export class Crossword {
         let bestCrossword: Crossword | undefined;
         let bestRatio: number | undefined;
 
-        for (let i = 0; i < this.attempts; i++) {
+        for (let i = 0; i < this.attempts || (bestRatio !== undefined && bestRatio < this.minimumRatio && i < 2 * this.attempts); i++) {
             this.clear();
             this._generate(i < this.attempts / 2);
-            let ratio = Math.abs(1 - this.grid.height / this.grid.width);
-            console.log('Grid Ratio:', ratio, '- lonely words:', this.lonelyWords);
+
+            // We aim for the height to be half of the width
+            let ratio = getRatio(this.grid.height, this.grid.width);
+            // noinspection JSSuspiciousNameCombination
+            let transposedRatio = getRatio(this.grid.width, this.grid.height);
+
+            if (transposedRatio < ratio) {
+                this.grid.transpose();
+                ratio = transposedRatio;
+            }
+
+            debug.log('Grid Ratio:', ratio, '- lonely words:', this.lonelyWords);
             if (bestCrossword === undefined || bestRatio === undefined ||
                 this.lonelyWords < bestCrossword.lonelyWords ||
                 this.lonelyWords === bestCrossword.lonelyWords && ratio <= bestRatio && this.grid.area < bestCrossword.grid.area) {
