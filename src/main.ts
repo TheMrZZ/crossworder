@@ -23,6 +23,7 @@ function addInputWord() {
     }
 
     addWord(input.value);
+    input.value = "";
 }
 
 function addWord(word: string) {

@@ -1,7 +1,7 @@
 body {
   margin: 0;
   padding: 0;
-  background: white;
+  background: linear-gradient(to right bottom, rgba(245, 159, 102, 0.479), rgba(132, 238, 252, 0.726)) fixed, linear-gradient(to right top, rgba(255, 251, 0, 0.274), rgba(255, 0, 149, 0.397)) fixed;
   height: 100vh;
   color: #191919;
   display: flex;
@@ -16,7 +16,6 @@ body {
   font-family: "Segoe UI", sans-serif;
   border-radius: 1px;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
-  margin-bottom: 2px;
 }
 
 #head h1 {
@@ -31,6 +30,7 @@ main {
   display: flex;
   align-items: flex-start;
   flex-direction: row;
+  padding: 20px;
 }
 
 main > * {
@@ -43,8 +43,14 @@ main > * {
   border-radius: 2px;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
   background-color: rgb(250, 247, 248);
+  height: 90%;
+  max-height: 90vh;
   position: sticky;
-  min-height: 100%;
+  top: 0.5em;
+}
+
+#table {
+  overflow: auto;
 }
 
 #wordForm {
@@ -78,7 +84,7 @@ main > * {
 }
 
 .word2 {
-  color: #ffe119
+  color: #a18d11
 }
 
 .word3 {
@@ -106,7 +112,7 @@ main > * {
 }
 
 .word9 {
-  color: #fabebe
+  color: #321953
 }
 
 .word10 {
