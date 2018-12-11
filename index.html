@@ -24,11 +24,23 @@
       <form action="javascript:void(0);" id="wordForm">
         <input type="text" id="wordInput" placeholder="Rajouter un mot...">
       </form>
+      <label>
+        Taille du mot croisé:
+        <input id="size-slider" type="range" min="1" max="100" value="50">
+      </label>
     </div>
-    <div id="table">
-      <table id="crossword">
-      </table>
-    </div>
+    <table id="crossword">
+    </table>
   </main>
+
+  <script>
+    const sizeSlider = document.getElementById('size-slider');
+    const table = document.getElementById('crossword');
+    sizeSlider.oninput = function () {
+      const diff = 50 - sizeSlider.value;
+      table.style.fontSize = `calc(1em - ${diff}px)`;
+    }
+  </script>
+
 </body>
 </html>
