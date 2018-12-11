@@ -22,15 +22,20 @@ function allIndexesOf(str: string, searchString: string, position: number = 0) {
 }
 
 function getRatio(height: number, width:number): number {
+    // If width or height is 0, the grid is in 1D, the ratio can't be better
+    if (height === 0 || width === 0) {
+        return 0;
+    }
+
     const wantedRatio = 0.5;
-    return Math.abs(0.5 - height / width);
+    return Math.abs(wantedRatio - height / width);
 }
 
 export class Crossword {
     private grid: Grid;
     private nextId: number;
     private lonelyWords: number;
-    private readonly words: string[];
+    private words: string[];
     private readonly attempts: number;
     private readonly minimumRatio: number;
 
@@ -58,10 +63,11 @@ export class Crossword {
     }
 
     private _generate(random: boolean = false) {
+        // We have to copy the words, because else it will change the bestGrid words too
         if (!random) {
-            this.words.sort((s1, s2) => s2.length - s1.length);
+            this.words = [...this.words].sort((s1, s2) => s2.length - s1.length);
         } else {
-            shuffle(this.words);
+            this.words = shuffle([...this.words]);
         }
 
         for (const word of this.words) {
@@ -84,7 +90,6 @@ export class Crossword {
             let ratio = getRatio(this.grid.height, this.grid.width);
             // noinspection JSSuspiciousNameCombination
             let transposedRatio = getRatio(this.grid.width, this.grid.height);
-
             if (transposedRatio < ratio) {
                 this.grid.transpose();
                 ratio = transposedRatio;
@@ -100,8 +105,7 @@ export class Crossword {
         }
 
         Object.assign(this, bestCrossword);
-
-        console.log('Best ratio:', bestRatio, '- best lonely words:', this.lonelyWords);
+        debug.log('Best ratio:', bestRatio, '- best lonely words:', this.lonelyWords);
     }
 
     private getWordCoordinates(word: string): Position {
@@ -201,5 +205,13 @@ export class Crossword {
 
         // Now, positions are valid. We take a random one
         return possiblePositions[Math.floor(Math.random() * possiblePositions.length)];
+    }
+
+    public getWords() {
+        return this.words;
+    }
+
+    deleteWord(index: number) {
+        this.words.splice(index, 1);
     }
 }

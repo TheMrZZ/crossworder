@@ -204,6 +204,10 @@ export class Grid {
         while (!this.grid.some(row => row[row.length - 1].letter !== "")) {
             this.grid.forEach(row => row.pop());
         }
+
+        if (this.height === 0) {
+            this.grid = [[]];
+        }
     }
 
     forEachCell(fn: (cell: Cell, row: number, col: number) => void) {

@@ -4,6 +4,10 @@ const debug = DEBUG_MODE ? console : Object.assign({}, console, {
     log: () => {
     },
     table: () => {
+    },
+    time: () => {
+    },
+    timeEnd: () => {
     }
 });
 
