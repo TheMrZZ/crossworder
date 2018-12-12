@@ -96,7 +96,11 @@ main > * {
 }
 
 .deleteWord {
-  height: 10px;
+  height: 0.75em;
+  display: flex;
+  align-self: center;
+  flex-direction: column;
+  margin-right: 0.3em;
 }
 
 /* Crossword */

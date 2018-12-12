@@ -102,7 +102,7 @@ function createWordList(words: string[]) {
         const word = words[i];
         let li = document.createElement('li');
         li.className = `letter word${wordColorNumber[i % numberOfColors]} num${i}`;
-        li.innerHTML = `<img class="deleteWord" src="./trash.svg" alt="Delete the word" title="Delete the word '${word}'"> <span>${word}</span>`;
+        li.innerHTML = `<img class="deleteWord" src="./dist/trash.svg" alt="Delete the word" title="Delete the word '${word}'"> <span>${word}</span>`;
         wordList.appendChild(li);
     }
 }

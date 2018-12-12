@@ -20,19 +20,15 @@ export class Cell {
     public direction: Direction;
     public readonly originalDirection: Direction;
 
-    constructor(letter: string, direction: Direction, wordId: number[] | number) {
+    constructor(letter: string, direction: Direction, wordIds: number[]) {
         this.letter = letter;
-        if (typeof wordId === 'number') {
-            this.wordId = [wordId];
-        } else {
-            this.wordId = wordId;
-        }
+        this.wordId = wordIds;
         this.direction = direction;
         this.originalDirection = direction;
     }
 
     static emptyCell() {
-        return new this('', Direction.NONE, -1);
+        return new this('', Direction.NONE, [-1]);
     }
 }
 
@@ -144,7 +140,7 @@ export class Grid {
         }
 
         for (const letter of word) {
-            let cell = new Cell(letter, direction, wordId);
+            let cell = new Cell(letter, direction, [wordId]);
 
             this.setCell(cell, row, col);
 

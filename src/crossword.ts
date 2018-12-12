@@ -67,7 +67,7 @@ export class Crossword {
         if (!random) {
             this.words = [...this.words].sort((s1, s2) => s2.length - s1.length);
         } else {
-            this.words = shuffle([...this.words]);
+            shuffle([...this.words]);
         }
 
         for (const word of this.words) {
