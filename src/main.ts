@@ -154,6 +154,7 @@ function addDeleteWord() {
 
 function saveGrid() {
     const crossword = document.getElementById('crossword') as HTMLTableElement;
+
     html2canvas(crossword.children[0] as HTMLTableSectionElement, {
         allowTaint: true,
         foreignObjectRendering: true,
