@@ -21,7 +21,7 @@ function allIndexesOf(str: string, searchString: string, position: number = 0) {
     return indexes;
 }
 
-function getRatio(height: number, width:number): number {
+function getRatio(height: number, width: number): number {
     // If width or height is 0, the grid is in 1D, the ratio can't be better
     if (height === 0 || width === 0) {
         return 0;
@@ -38,6 +38,7 @@ export class Crossword {
     private words: string[];
     private readonly attempts: number;
     private readonly minimumRatio: number;
+    private sortedWords: string[];
 
     constructor(attempts: number = 1, minimumRatio: number = 0.25) {
         this.words = [];
@@ -46,6 +47,7 @@ export class Crossword {
         this.lonelyWords = 0;
         this.attempts = attempts;
         this.minimumRatio = minimumRatio;
+        this.sortedWords = []
     }
 
     getGrid() {
@@ -65,7 +67,7 @@ export class Crossword {
     private _generate(random: boolean = false) {
         // We have to copy the words, because else it will change the bestGrid words too
         if (!random) {
-            this.words = [...this.words].sort((s1, s2) => s2.length - s1.length);
+            this.words = this.sortedWords;
         } else {
             shuffle([...this.words]);
         }
@@ -79,10 +81,13 @@ export class Crossword {
     }
 
     generate() {
+        this.sortedWords = [...this.words].sort((s1, s2) => s2.length - s1.length);
         let bestCrossword: Crossword | undefined;
         let bestRatio: number | undefined;
 
-        for (let i = 0; i < this.attempts || (bestRatio !== undefined && bestRatio < this.minimumRatio && i < 2 * this.attempts); i++) {
+        for (let i = 0;
+             i < this.attempts || (bestRatio !== undefined && bestRatio < this.minimumRatio && i < 2 * this.attempts);
+             i++) {
             this.clear();
             this._generate(i < this.attempts / 2);
 
@@ -121,18 +126,16 @@ export class Crossword {
             // Take only the cells which have the same letter than one in the word
             const indexes = allIndexesOf(word, cell.letter);
             for (const index of indexes) {
-                if (index >= 0) {
-                    let direction = perpendicular(cell.direction);
-                    let pos = {row, col, direction};
+                let direction = perpendicular(cell.direction);
+                let pos = {row, col, direction};
 
-                    if (direction === Direction.VERTICAL) {
-                        pos.row -= index;
-                    } else {
-                        pos.col -= index;
-                    }
-
-                    possiblePositions.push(pos);
+                if (direction === Direction.VERTICAL) {
+                    pos.row -= index;
+                } else {
+                    pos.col -= index;
                 }
+
+                possiblePositions.push(pos);
             }
         }));
         debug.log('Possible positions:', possiblePositions);

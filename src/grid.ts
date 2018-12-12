@@ -26,11 +26,9 @@ export class Cell {
         this.direction = direction;
         this.originalDirection = direction;
     }
-
-    static emptyCell() {
-        return new this('', Direction.NONE, [-1]);
-    }
 }
+
+const emptyCell = new Cell('', Direction.NONE, [-1]);
 
 export class Grid {
     private grid: Cell[][];
@@ -57,7 +55,7 @@ export class Grid {
 
     getCell(row: number, col: number): Cell {
         if (!this.inBound(row, col)) {
-            return Cell.emptyCell();
+            return emptyCell;
         }
 
         return this.grid[row][col];
@@ -94,7 +92,7 @@ export class Grid {
                 if (!atBeginning) {
                     row = this.height - 1;
                 }
-                this.grid[row].push(Cell.emptyCell());
+                this.grid[row].push(emptyCell);
             }
         }
     }
@@ -103,9 +101,9 @@ export class Grid {
         for (let i = 0; i < n; i++) {
             for (const row of this.grid) {
                 if (atBeginning) {
-                    row.unshift(Cell.emptyCell());
+                    row.unshift(emptyCell);
                 } else {
-                    row.push(Cell.emptyCell());
+                    row.push(emptyCell);
                 }
             }
         }
@@ -168,7 +166,7 @@ export class Grid {
 
                 // If there is no more IDs, it means that this letter should not exist anymore => delete it
                 if (this.grid[i][j].wordId.length === 0) {
-                    this.grid[i][j] = Cell.emptyCell();
+                    this.grid[i][j] = emptyCell;
                 }
             }
         }
