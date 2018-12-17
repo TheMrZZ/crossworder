@@ -95,6 +95,12 @@ main > * {
   flex-direction: row;
 }
 
+#saveCrossword {
+  display: flex;
+  align-self: center;
+  flex-flow: column nowrap;
+}
+
 .deleteWord {
   height: 0.75em;
   display: flex;
