@@ -3,6 +3,8 @@ body {
   padding: 0;
   background: linear-gradient(to right bottom, rgba(245, 159, 102, 0.479), rgba(132, 238, 252, 0.726)) fixed, linear-gradient(to right top, rgba(255, 251, 0, 0.274), rgba(255, 0, 149, 0.397)) fixed;
   height: 100vh;
+  width: 100vw;
+
   color: #191919;
   display: flex;
   flex-direction: column;
@@ -35,10 +37,12 @@ main {
   display: grid;
   grid-template: "sidebar crossword";
   grid-template-columns: 20% auto;
+  grid-template-rows: 100%;
+
   column-gap: 10px;
   padding: 20px;
-  max-height: 85vh;
-  height: 85vh;
+
+  height: 90%;
 }
 
 main > * {
@@ -46,8 +50,6 @@ main > * {
   border-radius: 2px;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
   background-color: rgb(250, 247, 248);
-  max-height: 85vh;
-  height: 85vh;
 }
 
 /* Aside */
