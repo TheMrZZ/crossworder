@@ -28,12 +28,16 @@
     "@types/html2canvas": "0.0.35",
     "babel-core": "^7.0.0-bridge.0",
     "babel-loader": "^8.0.4",
+    "css-loader": "^2.0.1",
+    "postcss-loader": "^3.0.0",
+    "style-loader": "^0.23.1",
     "ts-loader": "^5.3.1",
     "typescript": "^3.1.5",
     "webpack": "^4.27.1",
     "webpack-cli": "^3.1.2"
   },
   "dependencies": {
+    "autoprefixer": "^9.4.3",
     "file-saver": "^2.0.0",
     "html2canvas": "^1.0.0-alpha.12"
   }

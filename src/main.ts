@@ -2,6 +2,7 @@ import {Crossword} from './crossword';
 import {randomRange, Latinize} from "./utils";
 import html2canvas from "html2canvas";
 import {saveAs} from "file-saver";
+import './index.css';
 
 import debug from "./debug";
 

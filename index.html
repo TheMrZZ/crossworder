@@ -3,8 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <title>Mots Croisés</title>
-  <link rel="stylesheet" type="text/css" href="./index.css">
+
+  <!-- The following script will import the CSS too, because CSS is included in the bundle! -->
   <script src="./dist/app.bundle.js"></script>
+
   <meta property="og:title" content="Générateur de mots croisés">
   <meta property="og:url" content="https://themrzz.github.io/crossworder/">
   <meta property="og:type" content="website">
@@ -19,22 +21,21 @@
     <h1>Mots croisés</h1>
   </header>
 
-  <main>
-    <div id="aside">
-      <label>
-        Taille du mot croisé:
-        <input id="sizeSlider" type="range" min="1" max="100" value="50">
-      </label>
-      <button type="button" id="saveCrossword">Sauvegarder</button>
-      <form action="javascript:void(0);" id="wordForm">
-        <input type="text" id="wordInput" placeholder="Rajouter un mot...">
-      </form>
-      <ul id="wordList">
-      </ul>
-    </div>
+  <div id="aside" class="main">
+    <form action="javascript:void(0);" id="wordForm">
+      <input type="text" id="wordInput" placeholder="Rajouter un mot...">
+    </form>
+    <ul id="wordList">
+    </ul>
+    <button type="button" id="saveCrossword"><img src="./dist/camera.svg" alt="Sauvegarder le mot croisés"></button>
+  </div>
+
+  <div id="crossword-container" class="main">
     <table id="crossword">
     </table>
-  </main>
+    <!--suppress HtmlFormInputWithoutLabel -->
+    <input id="sizeSlider" type="range" min="1" max="100" value="50">
+  </div>
 
   <script>
     const sizeSlider = document.getElementById('sizeSlider')

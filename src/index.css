@@ -6,9 +6,13 @@ body {
   width: 100vw;
 
   color: #191919;
-  display: flex;
-  flex-direction: column;
   overflow: hidden;
+
+  display: grid;
+  grid-template-areas: "header header" "sidebar crossword ";
+
+  grid-template-rows: fit-content(100%) auto;
+  grid-template-columns: 20% auto;
 }
 
 /* Header */
@@ -30,23 +34,12 @@ body {
 }
 
 /* Content */
-main {
-  flex-grow: 1;
+.main {
   font-size: 2em;
 
-  display: grid;
-  grid-template: "sidebar crossword";
-  grid-template-columns: 20% auto;
-  grid-template-rows: 100%;
-
-  column-gap: 10px;
   padding: 20px;
+  margin: 10px;
 
-  height: 90%;
-}
-
-main > * {
-  padding: 10px;
   border-radius: 2px;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16);
   background-color: rgb(250, 247, 248);
@@ -80,11 +73,6 @@ main > * {
   width: 80%;
 }
 
-#sizeSlider {
-  width: 100%;
-  display: block;
-}
-
 #wordList {
   display: block;
   margin: 0;
@@ -98,9 +86,16 @@ main > * {
 }
 
 #saveCrossword {
-  display: flex;
-  align-self: center;
-  flex-flow: column nowrap;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
+}
+
+#saveCrossword > img {
+  margin: auto;
 }
 
 .deleteWord {
@@ -112,8 +107,23 @@ main > * {
 }
 
 /* Crossword */
-#crossword {
+#crossword-container {
   grid-area: crossword;
+  display: flex;
+  overflow: hidden;
+
+  align-content: space-between;
+  flex-flow: column nowrap;
+  padding-bottom: 0;
+}
+
+#sizeSlider {
+  align-self: flex-end;
+  width: 100%;
+}
+
+#crossword {
+  flex-grow: 1;
 
   display: block;
   overflow: auto;

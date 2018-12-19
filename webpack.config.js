@@ -6,17 +6,36 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'app.bundle.js',
-    library: 'EntryPoint'
+    library: 'EntryPoint',
   },
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.json']
+    extensions: ['.ts', '.tsx', '.js', '.json'],
   },
   module: {
-    rules: [{
-      // Include ts, tsx, js, and jsx files.
-      test: /\.(ts|js)x?$/,
-      exclude: /node_modules/,
-      loader: 'babel-loader',
-    }],
-  }
-};
+    rules: [
+      {
+        // Include ts, tsx, js, and jsx files.
+        test: /\.(ts|js)x?$/,
+        exclude: /node_modules/,
+        loader: 'babel-loader',
+      },
+      {
+        test: /\.css$/,
+        exclude: /node_modules/,
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              importLoaders: 1,
+            },
+          },
+          {
+            loader: 'postcss-loader',
+          },
+        ],
+      }],
+  },
+}
