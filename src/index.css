@@ -132,8 +132,8 @@ body.screenshot {
 }
 
 #sizeSlider {
-  align-self: flex-end;
-  width: 100%;
+  align-self: center;
+  width: calc(100% - 50px * 2); /* We have to remove the "Save the crossword" button's width */
 }
 
 .screenshot #sizeSlider {

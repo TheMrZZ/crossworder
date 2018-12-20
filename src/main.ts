@@ -12,6 +12,7 @@ let tableBody: HTMLTableSectionElement;
 let input: HTMLInputElement | null;
 let crossword: Crossword;
 let wordList: HTMLUListElement;
+let sizeSlider: HTMLInputElement;
 
 const numberOfColors = 16;
 let wordColorNumber: { [key: number]: number } = {};
@@ -28,6 +29,10 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     form.onsubmit = addInputWord;
     crossword = new Crossword(20);
+
+    sizeSlider = document.getElementById('sizeSlider') as HTMLInputElement;
+    sizeSlider.value = "50";
+    sizeSlider.oninput = changeTableFontSize;
 });
 
 function addInputWord() {
@@ -191,5 +196,11 @@ function saveGrid() {
             saveAs(blob as Blob, 'motsCroises.png');
         });
         document.body.classList.remove('screenshot');
+        changeTableFontSize();
     });
+}
+
+function changeTableFontSize() {
+    const diff = 50 - parseInt(sizeSlider.value);
+    tableBody.style.fontSize = `calc(1em - ${diff}px)`;
 }
