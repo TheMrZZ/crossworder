@@ -2,11 +2,13 @@ import {Crossword} from './crossword';
 import {randomRange, Latinize} from "./utils";
 import html2canvas from "html2canvas";
 import {saveAs} from "file-saver";
+
+// Don't remove: it allows webpack to understand it should compile the CSS file
 import './index.css';
 
 import debug from "./debug";
 
-let table: HTMLElement | null;
+let tableBody: HTMLTableSectionElement;
 let input: HTMLInputElement | null;
 let crossword: Crossword;
 let wordList: HTMLUListElement;
@@ -15,13 +17,13 @@ const numberOfColors = 16;
 let wordColorNumber: { [key: number]: number } = {};
 
 document.addEventListener("DOMContentLoaded", function () {
-    table = document.getElementById('crossword');
+    tableBody = (document.getElementById('crossword') as Element).children[0] as HTMLTableSectionElement;
     input = document.getElementById('wordInput') as HTMLInputElement;
     wordList = document.getElementById('wordList') as HTMLUListElement;
     let form = document.getElementById('wordForm');
     (document.getElementById('saveCrossword') as HTMLButtonElement).onclick = saveGrid;
 
-    if (table === null || form === null || input === null) {
+    if (tableBody === null || form === null || input === null) {
         throw new Error('Table or form or input is null.');
     }
     form.onsubmit = addInputWord;
@@ -29,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function addInputWord() {
-    if (table === null || input === null) {
+    if (tableBody === null || input === null) {
         throw new Error('Table or input is null.');
     }
 
@@ -61,11 +63,10 @@ function generate() {
 }
 
 function createTable() {
-    if (table === null) {
+    if (tableBody === null) {
         throw new Error('Table is null.');
     }
-    table.innerHTML = '';
-    let tableBody = document.createElement('tbody');
+    tableBody.innerHTML = "";
 
     crossword.getGrid().getGrid()
         .map(
@@ -91,7 +92,6 @@ function createTable() {
 
             tableBody.appendChild(row);
         });
-    table.appendChild(tableBody);
 }
 
 function createWordList(words: string[]) {
@@ -154,9 +154,34 @@ function addDeleteWord() {
 }
 
 function saveGrid() {
-    const crossword = document.getElementById('crossword') as HTMLTableElement;
+    // We need to use the tbody, since it has the real dimension of the table. The table element can be larger than the real table
 
-    html2canvas(crossword.children[0] as HTMLTableSectionElement, {
+    document.body.classList.add('screenshot');
+
+    let height = document.body.offsetHeight;
+    let width = document.body.offsetWidth;
+
+    let rows = tableBody.children.length;
+    let cols = 0;
+    if (rows > 0) {
+        cols = (tableBody.children[0] as HTMLTableRowElement).children.length;
+    }
+
+    let verticalSize = Math.floor(height / rows);
+    let horizontalSize = Math.floor(width / cols);
+    let fontSize = Math.min(verticalSize, horizontalSize);
+
+    tableBody.style.fontSize = fontSize + 'px';
+
+    // Problem: the real font size won't be fontSize px, but more - since cells take a bit more space. We have to scale it
+    const cell = (tableBody.children[0].children[0] as HTMLTableCellElement);
+    let realSize = verticalSize < horizontalSize ? cell.offsetHeight : cell.offsetWidth;
+    let scaleFactor = realSize / fontSize;
+
+    fontSize = Math.floor(fontSize / scaleFactor);
+    tableBody.style.fontSize = fontSize + 'px';
+
+    html2canvas(tableBody, {
         allowTaint: true,
         foreignObjectRendering: true,
         scale: 1,
@@ -165,5 +190,6 @@ function saveGrid() {
         canvas.toBlob(function (blob) {
             saveAs(blob as Blob, 'motsCroises.png');
         });
+        document.body.classList.remove('screenshot');
     });
 }

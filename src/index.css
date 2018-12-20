@@ -15,6 +15,12 @@ body {
   grid-template-columns: 20% auto;
 }
 
+body.screenshot {
+  grid-template-areas: "crossword ";
+  grid-template-rows: 100%;
+  grid-template-columns: 100%;
+}
+
 /* Header */
 #head {
   grid-area: header;
@@ -45,11 +51,15 @@ body {
   background-color: rgb(250, 247, 248);
 }
 
+.screenshot .main {
+  margin: 0;
+}
+
 /* Aside */
 #aside {
   grid-area: sidebar;
   top: 0.5em;
-  font-size: 0.5em;
+  font-size: 1em;
   overflow: auto;
   padding: 5px;
 }
@@ -117,9 +127,17 @@ body {
   padding-bottom: 0;
 }
 
+.screenshot #crossword-container {
+  padding: 0;
+}
+
 #sizeSlider {
   align-self: flex-end;
   width: 100%;
+}
+
+.screenshot #sizeSlider {
+  display: none;
 }
 
 #crossword {
@@ -142,13 +160,21 @@ body {
   width: 0.9em;
 }
 
-/* Letters zoom on hover */
+/* Letters zoom on hover, except on screenshot */
 .letter {
   transition-duration: 0.3s;
 }
 
 .letter.selected {
   transform: scale(1.2);
+}
+
+.screenshot .letter {
+  transition-duration: 0s;
+}
+
+.screenshot .letter.selected {
+  transform: scale(1);
 }
 
 .scale {
