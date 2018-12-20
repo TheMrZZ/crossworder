@@ -24,6 +24,7 @@
 
   <div id="aside" class="main">
     <form action="javascript:void(0);" id="wordForm">
+      <label for="wordInput" style="display: none;">Rajouter un mot</label>
       <input type="text" id="wordInput" placeholder="Rajouter un mot...">
     </form>
     <ul id="wordList">
@@ -37,14 +38,14 @@
 
       </tbody>
     </table>
-    <label id="sizeSliderLabel" for="sizeSlider" hidden>Size of crossword letters</label>
+    <label id="sizeSliderLabel" for="sizeSlider" style="display: none">Size of crossword letters</label>
     <input id="sizeSlider" type="range" min="1" max="100" value="50">
   </div>
 
   <script>
       if ('serviceWorker' in navigator) {
           navigator.serviceWorker
-              .register('./sw.js')
+              .register('./sw.js', {scope: '/'})
               .then(function () {
                   console.log("Service Worker Registered");
               });
