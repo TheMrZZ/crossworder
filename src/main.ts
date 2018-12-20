@@ -187,13 +187,10 @@ function saveGrid() {
     fontSize = Math.floor(fontSize / scaleFactor);
     tableBody.style.fontSize = fontSize + 'px';
 
-    html2canvas(tableBody.parentElement as HTMLElement, {
+    html2canvas(tableBody, {
         allowTaint: true,
         foreignObjectRendering: true,
-        scale: 1,
         logging: false,
-        height: tableBody.getBoundingClientRect().height,
-        width: tableBody.getBoundingClientRect().width
     }).then(canvas => {
         setTimeout(() => {
             canvas.toBlob(function (blob) {
