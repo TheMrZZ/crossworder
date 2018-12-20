@@ -4,13 +4,13 @@
     "target": "esnext",                          /* Specify ECMAScript target version: 'ES3' (default), 'ES5', 'ES2015', 'ES2016', 'ES2017','ES2018' or 'ESNEXT'. */
     "module": "commonjs",                     /* Specify module code generation: 'none', 'commonjs', 'amd', 'system', 'umd', 'es2015', or 'ESNext'. */
     "moduleResolution": "node",            /* Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6). */
-    //"noEmit": true,                        /* Do not emit outputs. */
+    "noEmit": true,                        /* Do not emit outputs. */
     "sourceMap": true,                     /* Generates corresponding '.map' file. */
     "strict": true,                           /* Enable all strict type-checking options. */
     "isolatedModules": true,               /* Transpile each file as a separate module (similar to 'ts.transpileModule'). */
     "esModuleInterop": true,                   /* Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'. */
-    "rootDir": "./src",                       /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
-    "outDir": "./js"                        /* Redirect output structure to the directory. */
+    "rootDir": "./src"                       /* Specify the root directory of input files. Use to control the output directory structure with --outDir. */
+    //"outDir": "./js"                        /* Redirect output structure to the directory. */
     // "lib": [],                             /* Specify library files to be included in the compilation. */
     // "allowJs": true,                       /* Allow javascript files to be compiled. */
     // "checkJs": true,                       /* Report errors in .js files. */
