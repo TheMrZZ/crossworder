@@ -177,7 +177,7 @@ function saveGrid() {
     let fontSize = Math.min(verticalSize, horizontalSize);
 
     tableBody.style.fontSize = fontSize + 'px';
-    console.log(height, width);
+    debug.log(height, width);
 
     // Problem: the real font size won't be fontSize px, but more - since cells take a bit more space. We have to scale it
     const cell = (tableBody.children[0].children[0] as HTMLTableCellElement);

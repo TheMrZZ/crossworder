@@ -1,6 +1,6 @@
 import debug from './debug';
 
-import {Cell, Direction, Grid as Grid, perpendicular} from './grid';
+import {Direction, Grid as Grid, perpendicular} from './grid';
 import {shuffle} from './utils';
 
 type Position = {
@@ -9,16 +9,13 @@ type Position = {
     direction: Direction
 }
 
-function allIndexesOf(str: string, searchString: string, position: number = 0) {
-    let indexes = [];
-    for (let i = position; i < str.length; i++) {
-        const char = str[i];
+function* allIndexesOf(str: string, searchString: string, position: number = 0): IterableIterator<number> {
+    for (let index = position; index < str.length; index++) {
+        const char = str[index];
         if (char === searchString) {
-            indexes.push(i);
+            yield index;
         }
     }
-
-    return indexes;
 }
 
 function getRatio(height: number, width: number): number {
@@ -47,7 +44,7 @@ export class Crossword {
         this.lonelyWords = 0;
         this.attempts = attempts;
         this.minimumRatio = minimumRatio;
-        this.sortedWords = []
+        this.sortedWords = [];
     }
 
     getGrid() {
@@ -114,78 +111,82 @@ export class Crossword {
     }
 
     private getWordCoordinates(word: string): Position {
+        debug.log('Getting coordinates for word', word);
         if (this.grid.width === 0) {
             return {row: 0, col: 0, direction: Direction.HORIZONTAL};
         }
 
-        // Possible starting positions for the new word
-        let possiblePositions: Position[] = [];
+        function getPossiblePositions(grid: Grid): Position[] {
+            let positions = [];
+            debug.log('Getting possible positions');
+            for (const {cell, row, col} of grid.iterCells()) {
+                debug.log(cell, row, col);
+                // Take only the cells which have the same letter than one in the word
+                for (const index of allIndexesOf(word, cell.letter)) {
+                    let direction = perpendicular(cell.direction);
+                    let pos = {row, col, direction};
 
+                    if (direction === Direction.VERTICAL) {
+                        pos.row -= index;
+                    } else {
+                        pos.col -= index;
+                    }
 
-        const getPossibleCells = (cell: Cell, row: number, col: number) => {
-            // Take only the cells which have the same letter than one in the word
-            const indexes = allIndexesOf(word, cell.letter);
-            for (const index of indexes) {
-                let direction = perpendicular(cell.direction);
-                let pos = {row, col, direction};
-
-                if (direction === Direction.VERTICAL) {
-                    pos.row -= index;
-                } else {
-                    pos.col -= index;
+                    if (validPosition(grid, pos)) {
+                        positions.push(pos);
+                    }
                 }
-
-                possiblePositions.push(pos);
             }
-        };
 
-        this.grid.forEachCell(getPossibleCells);
-        debug.log('Possible positions:', possiblePositions);
+            return positions;
+        }
 
         // Remove positions where word would break the crossword rules
-        const validPosition = (position: Position) => {
+        function validPosition(grid: Grid, position: Position): boolean {
             let {row, col, direction} = position;
 
             // No letter before the beginning of the word
-            if (direction === Direction.HORIZONTAL && this.grid.getCell(row, col - 1).letter !== '' ||
-                direction === Direction.VERTICAL && this.grid.getCell(row - 1, col).letter !== '') {
+            if (direction === Direction.HORIZONTAL && !grid.getCell(row, col - 1).empty ||
+                direction === Direction.VERTICAL && !grid.getCell(row - 1, col).empty) {
                 return false;
             }
 
             for (const letter of word) {
-                const cell = this.grid.getCell(row, col);
+                const cell = grid.getCell(row, col);
 
                 if (
-                    // Can't cross a different letter
-                    cell.letter !== '' && cell.letter !== letter ||
+                    !cell.empty && (
+                        // Can't cross a different letter
+                        cell.letter !== letter ||
 
-                    // Can't overlap a word going in the same direction
-                    cell.direction === direction ||
+                        // Can't overlap a word going in the same direction
+                        cell.direction === direction
+                    ) ||
 
                     // For vertical words:
                     direction === Direction.VERTICAL && (
                         // No word in parallel
-                        [direction, Direction.BOTH].indexOf(this.grid.getCell(row, col - 1).direction) > -1 ||
+                        [direction, Direction.BOTH].indexOf(grid.getCell(row, col - 1).direction) > -1 ||
 
                         // No word in parallel
-                        [direction, Direction.BOTH].indexOf(this.grid.getCell(row, col + 1).direction) > -1 ||
+                        [direction, Direction.BOTH].indexOf(grid.getCell(row, col + 1).direction) > -1 ||
 
                         // Word can't be placed next to the end of a perpendicular word
-                        [perpendicular(direction), Direction.BOTH].indexOf(this.grid.getCell(row, col - 1).direction) > -1
-                        && cell.letter === ''
+                        [perpendicular(direction), Direction.BOTH].indexOf(grid.getCell(row, col - 1).direction) > -1
+                        && cell.empty
                     ) ||
 
                     // For horizontal words:
                     direction === Direction.HORIZONTAL && (
                         // No word in parallel
-                        [direction, Direction.BOTH].indexOf(this.grid.getCell(row - 1, col).direction) > -1 ||
+                        [direction, Direction.BOTH].indexOf(grid.getCell(row - 1, col).direction) > -1 ||
 
                         // No word in parallel
-                        [direction, Direction.BOTH].indexOf(this.grid.getCell(row + 1, col).direction) > -1 ||
+                        [direction, Direction.BOTH].indexOf(grid.getCell(row + 1, col).direction) > -1 ||
 
                         // Word can't be placed next to the end of a perpendicular word
-                        [perpendicular(direction), Direction.BOTH].indexOf(this.grid.getCell(row - 1, col).direction) > -1
-                        && cell.letter === ''
+                        [perpendicular(direction), Direction.BOTH].indexOf(grid.getCell(row - 1, col).direction) > -1
+                        && cell.empty
                     )
 
                 ) {
@@ -200,18 +201,23 @@ export class Crossword {
             }
 
             // No letter after the end of the word
-            return this.grid.getCell(row, col).letter === '';
-        };
+            return grid.getCell(row, col).empty;
+        }
 
-        possiblePositions = possiblePositions.filter(validPosition);
+        let possiblePositions = getPossiblePositions(this.grid);
+        debug.log('Possible positions:', possiblePositions);
 
-        if (possiblePositions.length === 0) {
+
+        let validPositions: Position[] = possiblePositions;
+
+        if (validPositions.length === 0) {
+            debug.log('No possible position found.');
             this.lonelyWords++;
             return {row: this.grid.height + 1, col: 0, direction: Direction.HORIZONTAL};
         }
 
         // Now, positions are valid. We take a random one
-        return possiblePositions[Math.floor(Math.random() * possiblePositions.length)];
+        return validPositions[Math.floor(Math.random() * validPositions.length)];
     }
 
     public getWords() {

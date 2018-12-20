@@ -23,6 +23,7 @@
     "@babel/core": "^7.1.2",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-proposal-object-rest-spread": "^7.0.0",
+    "@babel/plugin-transform-regenerator": "^7.0.0",
     "@babel/preset-env": "^7.1.0",
     "@babel/preset-typescript": "^7.1.0",
     "@types/file-saver": "^2.0.0",
@@ -38,6 +39,8 @@
     "webpack-cli": "^3.1.2"
   },
   "dependencies": {
+    "@babel/polyfill": "^7.0.0",
+    "@babel/runtime": "^7.2.0",
     "autoprefixer": "^9.4.3",
     "file-saver": "^2.0.0",
     "html2canvas": "^1.0.0-alpha.12"

@@ -26,9 +26,28 @@ export class Cell {
         this.direction = direction;
         this.originalDirection = direction;
     }
+
+    get empty() {
+        return this.direction === Direction.NONE;
+    }
 }
 
 const emptyCell = new Cell('', Direction.NONE, [-1]);
+
+const iterCells = function* (this: Grid): IterableIterator<{ cell: Cell, row: number, col: number }> {
+    let grid = this.getGrid();
+    debug.log('Grid is', grid);
+    for (let row = 0; row < grid.length; row++) {
+        for (let col = 0; col < grid[row].length; col++) {
+            const cell = grid[row][col];
+            debug.log('Cell is', cell, 'row:', row, 'col:', col);
+            if (!cell.empty) {
+                debug.log('Yielding cell');
+                yield {cell, row, col};
+            }
+        }
+    }
+};
 
 export class Grid {
     private grid: Cell[][];
@@ -68,7 +87,7 @@ export class Grid {
         }
 
         // If there is no cell, overwrite it
-        if (this.grid[row][col].letter === '') {
+        if (this.grid[row][col].empty) {
             this.grid[row][col] = cell;
         } else {
             // If there is already a cell, they have the same letter: merge the IDs
@@ -203,6 +222,8 @@ export class Grid {
             this.grid = [[]];
         }
     }
+
+    iterCells = iterCells.bind(this);
 
     forEachCell(fn: (cell: Cell, row: number, col: number) => void) {
         for (let row = 0; row < this.grid.length; row++) {
