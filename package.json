@@ -12,8 +12,9 @@
     "build": "npm run build:types && npm run build:js",
     "build:types": "tsc --emitDeclarationOnly",
     "build:js": "babel src --out-dir ./js --extensions \".ts,.tsx\" --source-maps inline",
-    "bundle": "webpack -p",
-    "bundle:watch": "webpack --watch"
+    "bundle": "webpack",
+    "bundle:watch": "webpack --watch",
+    "bundle:production": "webpack -p"
   },
   "author": "",
   "license": "ISC",
