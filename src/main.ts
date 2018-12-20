@@ -163,8 +163,8 @@ function saveGrid() {
 
     document.body.classList.add('screenshot');
 
-    let height = document.body.offsetHeight;
-    let width = document.body.offsetWidth;
+    let height = document.body.getBoundingClientRect().height;
+    let width = document.body.getBoundingClientRect().width;
 
     let rows = tableBody.children.length;
     let cols = 0;
@@ -177,6 +177,7 @@ function saveGrid() {
     let fontSize = Math.min(verticalSize, horizontalSize);
 
     tableBody.style.fontSize = fontSize + 'px';
+    console.log(height, width);
 
     // Problem: the real font size won't be fontSize px, but more - since cells take a bit more space. We have to scale it
     const cell = (tableBody.children[0].children[0] as HTMLTableCellElement);
@@ -186,17 +187,21 @@ function saveGrid() {
     fontSize = Math.floor(fontSize / scaleFactor);
     tableBody.style.fontSize = fontSize + 'px';
 
-    html2canvas(tableBody, {
+    html2canvas(tableBody.parentElement as HTMLElement, {
         allowTaint: true,
         foreignObjectRendering: true,
         scale: 1,
-        logging: false
+        logging: false,
+        height: tableBody.getBoundingClientRect().height,
+        width: tableBody.getBoundingClientRect().width
     }).then(canvas => {
-        canvas.toBlob(function (blob) {
-            saveAs(blob as Blob, 'motsCroises.png');
-        });
-        document.body.classList.remove('screenshot');
-        changeTableFontSize();
+        setTimeout(() => {
+            canvas.toBlob(function (blob) {
+                saveAs(blob as Blob, 'motsCroises.png');
+            });
+            document.body.classList.remove('screenshot');
+            changeTableFontSize();
+        }, 500);
     });
 }
 

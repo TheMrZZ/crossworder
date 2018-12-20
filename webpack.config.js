@@ -6,7 +6,6 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: 'app.bundle.js',
-    library: 'EntryPoint',
   },
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.json'],
