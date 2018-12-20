@@ -1,6 +1,6 @@
 import debug from './debug';
 
-import {Direction, Grid as Grid, perpendicular} from './grid';
+import {Cell, Direction, Grid as Grid, perpendicular} from './grid';
 import {shuffle} from './utils';
 
 type Position = {
@@ -122,7 +122,7 @@ export class Crossword {
         let possiblePositions: Position[] = [];
 
 
-        this.grid.forEachCell(((cell, row, col) => {
+        const getPossibleCells = (cell: Cell, row: number, col: number) => {
             // Take only the cells which have the same letter than one in the word
             const indexes = allIndexesOf(word, cell.letter);
             for (const index of indexes) {
@@ -137,11 +137,13 @@ export class Crossword {
 
                 possiblePositions.push(pos);
             }
-        }));
+        };
+
+        this.grid.forEachCell(getPossibleCells);
         debug.log('Possible positions:', possiblePositions);
 
         // Remove positions where word would break the crossword rules
-        possiblePositions = possiblePositions.filter(position => {
+        const validPosition = (position: Position) => {
             let {row, col, direction} = position;
 
             // No letter before the beginning of the word
@@ -199,7 +201,9 @@ export class Crossword {
 
             // No letter after the end of the word
             return this.grid.getCell(row, col).letter === '';
-        });
+        };
+
+        possiblePositions = possiblePositions.filter(validPosition);
 
         if (possiblePositions.length === 0) {
             this.lonelyWords++;
