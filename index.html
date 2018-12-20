@@ -37,16 +37,18 @@
 
       </tbody>
     </table>
-    <!--suppress HtmlFormInputWithoutLabel -->
+    <label id="sizeSliderLabel" for="sizeSlider" hidden>Size of crossword letters</label>
     <input id="sizeSlider" type="range" min="1" max="100" value="50">
   </div>
 
   <script>
-    if('serviceWorker' in navigator) {
-      navigator.serviceWorker
-      .register('./sw.js')
-      .then(function() { console.log("Service Worker Registered"); });
-    }
+      if ('serviceWorker' in navigator) {
+          navigator.serviceWorker
+              .register('./sw.js')
+              .then(function () {
+                  console.log("Service Worker Registered");
+              });
+      }
   </script>
 </body>
 </html>
