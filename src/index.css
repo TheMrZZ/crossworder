@@ -134,6 +134,7 @@ body.screenshot {
 #sizeSlider {
   align-self: center;
   width: calc(100% - 50px * 2); /* We have to remove the "Save the crossword" button's width */
+  padding: 5px 0;
 }
 
 .screenshot #sizeSlider {
