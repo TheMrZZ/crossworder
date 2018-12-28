@@ -1,12 +1,11 @@
-import {Crossword} from './crossword';
+import { Crossword } from './crossword'
 
-let crossword = new Crossword(25);
+let crossword = new Crossword(100)
 
-for (let i = 0; i < 25; i++) {
-    crossword.addWord("Abracadabrant");
-    crossword.generate();
+for (let i = 0; i < 50; i++) {
+  crossword.addWord(`ABRACADABRANT`)
 }
 
-crossword.generate();
+crossword.generate()
 
-console.table(crossword.getGrid());
+console.table(crossword.getGrid().getGrid().map(row => row.map(cell => cell.letter)))

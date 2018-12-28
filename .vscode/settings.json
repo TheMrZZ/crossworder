@@ -1,0 +1,7 @@
+{
+    "standard.options": {
+        "ignore": [
+            "node_modules/**"
+        ]
+    }
+}

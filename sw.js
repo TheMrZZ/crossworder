@@ -1,25 +1,25 @@
-importScripts('./cache-polyfill.js');
+importScripts('./cache-polyfill.js')
 
 self.addEventListener('install', function (e) {
-    e.waitUntil(
-        caches.open('main').then(function (cache) {
-            return cache.addAll([
-                '/',
-                '/dist/app.bundle.js',
-                '/index.html',
-                '/dist/camera.svg',
-                '/dist/trash.svg',
-            ]);
-        }).catch(error => {
-            console.error('Error caught |', error);
-        }),
-    );
-});
+  e.waitUntil(
+    caches.open('main').then(function (cache) {
+      return cache.addAll([
+        '/',
+        '/index.html',
+        '/dist/app.bundle.js',
+        '/dist/camera.svg',
+        '/dist/trash.svg',
+      ])
+    }).catch(error => {
+      console.error('Error caught |', error)
+    }),
+  )
+})
 
 self.addEventListener('fetch', function (event) {
-    event.respondWith(
-        caches.match(event.request).then(function (response) {
-            return response || fetch(event.request);
-        }),
-    );
-});
+  event.respondWith(
+    caches.match(event.request).then(function (response) {
+      return response || fetch(event.request)
+    }),
+  )
+})

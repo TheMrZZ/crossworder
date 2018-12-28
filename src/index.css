@@ -1,7 +1,18 @@
 body {
   margin: 0;
   padding: 0;
-  background: linear-gradient(to right bottom, rgba(245, 159, 102, 0.479), rgba(132, 238, 252, 0.726)) fixed, linear-gradient(to right top, rgba(255, 251, 0, 0.274), rgba(255, 0, 149, 0.397)) fixed;
+  background: linear-gradient(
+        to right bottom,
+        rgba(245, 159, 102, 0.479),
+        rgba(132, 238, 252, 0.726)
+      )
+      fixed,
+    linear-gradient(
+        to right top,
+        rgba(255, 251, 0, 0.274),
+        rgba(255, 0, 149, 0.397)
+      )
+      fixed;
   height: 100vh;
   width: 100vw;
 
@@ -25,7 +36,7 @@ body.screenshot {
 #head {
   grid-area: header;
   text-align: center;
-  vertical-align: center;
+  vertical-align: middle;
   background-color: rgb(250, 247, 248);
   font-family: "Segoe UI", sans-serif;
   border-radius: 1px;
@@ -79,7 +90,7 @@ body.screenshot {
   border-radius: 1px;
   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.16), 0 0 0 1px rgba(0, 0, 0, 0.08);
   border: none;
-  color: rgba(0, 0, 0, .87);
+  color: rgba(0, 0, 0, 0.87);
   width: 80%;
 }
 
@@ -102,10 +113,13 @@ body.screenshot {
   border-radius: 50%;
   height: 50px;
   width: 50px;
+  background-color: red;
 }
 
 #saveCrossword > img {
   margin: auto;
+  display: flex;
+  align-self: center;
 }
 
 .deleteWord {
@@ -133,115 +147,90 @@ body.screenshot {
 
 #sizeSlider {
   align-self: center;
-  width: calc(100% - 50px * 2); /* We have to remove the "Save the crossword" button's width */
+  width: calc(
+    100% - 50px * 2
+  ); /* We have to remove the "Save the crossword" button's width */
   padding: 5px 0;
 }
-
 .screenshot #sizeSlider {
   display: none;
 }
-
 #crossword {
   flex-grow: 1;
-
   display: block;
   overflow: auto;
-
   table-layout: fixed;
   border-spacing: 0;
 }
-
 #crossword td {
   padding: 0;
 }
-
 .letter {
   text-align: center;
   height: 1em;
   width: 0.9em;
 }
-
 /* Letters zoom on hover, except on screenshot */
 .letter {
   transition-duration: 0.3s;
 }
-
 .letter.selected {
   transform: scale(1.2);
 }
-
 .screenshot .letter {
   transition-duration: 0s;
 }
-
 .screenshot .letter.selected {
   transform: scale(1);
 }
-
 .scale {
 }
-
 /* Auto generated. Colors taken from https://en.wikipedia.org/wiki/Help:Distinguishable_colors */
 .word0 {
-  color: #e6194b
+  color: #e6194b;
 }
-
 .word1 {
-  color: #3cb44b
+  color: #3cb44b;
 }
-
 .word2 {
-  color: #a18d11
+  color: #a18d11;
 }
-
 .word3 {
-  color: #4363d8
+  color: #4363d8;
 }
-
 .word4 {
-  color: #f58231
+  color: #f58231;
 }
-
 .word5 {
-  color: #911eb4
+  color: #911eb4;
 }
-
 .word6 {
-  color: #808000
+  color: #808000;
 }
-
 .word7 {
-  color: #f032e6
+  color: #f032e6;
 }
-
 .word8 {
-  color: #005408
+  color: #005408;
 }
-
 .word9 {
-  color: #321953
+  color: #321953;
 }
-
 .word10 {
-  color: #008080
+  color: #008080;
 }
-
 .word11 {
-  color: #0078ff
+  color: #0078ff;
 }
-
 .word12 {
-  color: #9a6324
+  color: #9a6324;
 }
-
 .word13 {
   color: red;
 }
-
 .word14 {
-  color: #800000
+  color: #800000;
 }
-
 .word15 {
-  color: #000075
+  color: #000075;
 }
